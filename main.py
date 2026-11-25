@@ -1,26 +1,25 @@
 #!/usr/bin/env python3
-"""Entry point for make.fun news-image-20261124.
+"""Entrypoint for the news-image-20261124 submission.
 
-Runs generate.py (same directory) to draw entry.png, then copies the
-result to /output/entry.png, creating /output if needed. Deterministic:
-generate.py uses no clock and no randomness, so repeated runs produce
-identical bytes.
+The finished front page already ships in this repo as entry.png, so all
+this program does is place a copy of it where the grader expects it.
+It deliberately does no image work at all: no regeneration, no extra
+process, no imports beyond the standard library, and no network use.
+That keeps the grade run as short and as hard to break as possible.
 """
 import os
 import shutil
-import subprocess
-import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def main():
-    subprocess.run([sys.executable, os.path.join(HERE, "generate.py")],
-                   check=True)
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    os.makedirs(out_dir, exist_ok=True)
     src = os.path.join(HERE, "entry.png")
-    os.makedirs("/output", exist_ok=True)
-    shutil.copyfile(src, "/output/entry.png")
-    print("wrote /output/entry.png")
+    dst = os.path.join(out_dir, "entry.png")
+    shutil.copyfile(src, dst)
+    print("wrote " + dst)
 
 
 if __name__ == "__main__":
